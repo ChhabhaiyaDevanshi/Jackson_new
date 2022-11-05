@@ -1,6 +1,8 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:jackson_app/my_drawer_header.dart';
 
 class Personal_Info extends StatefulWidget {
   const Personal_Info({Key? key}) : super(key: key);
@@ -11,6 +13,15 @@ class Personal_Info extends StatefulWidget {
 
 class _Personal_InfoState extends State<Personal_Info> {
 
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setProfileData("20CE021").whenComplete((){
+      print("All data fetched");
+
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -207,10 +218,10 @@ class _Personal_InfoState extends State<Personal_Info> {
                                 ),
                               ),
                               SizedBox(height: 20,),
-                              Text('jsi001@gmail.com',
+                              Text(email,
                                 style:TextStyle(
                                     // fontWeight: FontWeight.bold,
-                                    fontSize: 20
+                                    fontSize: 18
                                 ),
                               ),
                               SizedBox(height: 20,),
@@ -257,7 +268,7 @@ class _Personal_InfoState extends State<Personal_Info> {
                                 ),
                               ),
                               SizedBox(height: 20,),
-                              Text('123456789',
+                              Text('${adhar}',
                                 style:TextStyle(
                                     // fontWeight: FontWeight.bold,
                                     fontSize: 20
@@ -303,7 +314,41 @@ class _Personal_InfoState extends State<Personal_Info> {
             ),
           )
       ),
-
     );
+  }
+  var username;
+  var adhar;
+  var acc;
+  var add2;
+  var email;
+
+  //this function is used to fetch particular data in the databsae field
+  Future getProfileInfo(user,field) async{
+    FirebaseDatabase database=FirebaseDatabase.instance;
+    DatabaseReference reference=database.ref("users/20CE021");
+    DatabaseEvent event=await reference.once();
+    //fetching data from firebase
+    print(event.snapshot.value);
+    final ref=FirebaseDatabase.instance.ref();
+
+    
+    final snapshot=await ref.child("users/${user}/${field}").get();
+    if(snapshot.exists)
+    {
+     return snapshot.value;
+    }
+    else
+    {
+      print("snapshot failed");
+    }
+  }
+
+  //this function fetched data using the above function and sets value to the variables 
+  Future setProfileData(user) async{
+    username=await getProfileInfo(user, "username");
+    adhar=await getProfileInfo(user, "aadhar");
+    email=await getProfileInfo(user, "email");
+    acc=await getProfileInfo(user, "acc");
+    add2=await getProfileInfo(user, "add2");
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:jackson_app/Family_Info.dart';
@@ -16,7 +17,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     // TODO: implement initState
-    getProfileInfo();
+    //getProfileInfo("20CE021","fatherdob");
   }
   @override
   Widget build(BuildContext context) {
@@ -109,13 +110,22 @@ class _ProfilePageState extends State<ProfilePage> {
 
     );
   }
-  Future getProfileInfo() async{
+  Future getProfileInfo(user,field) async{
     FirebaseDatabase database=FirebaseDatabase.instance;
     DatabaseReference reference=database.ref("users/20CE021");
     DatabaseEvent event=await reference.once();
     //fetching data from firebase
     print(event.snapshot.value);
 
-
+    final ref=FirebaseDatabase.instance.ref();
+    final snapshot=await ref.child("users/${user}/${field}").get();
+    if(snapshot.exists)
+      {
+        print("snapshot value ${snapshot.value}");
+      }
+    else
+      {
+        print("snapshot failed");
+      }
   }
 }
