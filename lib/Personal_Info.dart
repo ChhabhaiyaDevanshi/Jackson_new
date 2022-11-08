@@ -12,14 +12,16 @@ class Personal_Info extends StatefulWidget {
 }
 
 class _Personal_InfoState extends State<Personal_Info> {
-
+  var isLoading=true;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     setProfileData("20CE021").whenComplete((){
       print("All data fetched");
-
+      setState((){
+        isLoading=false;
+      });
     });
   }
   @override
@@ -38,7 +40,7 @@ class _Personal_InfoState extends State<Personal_Info> {
             )
         ),
       ),
-      body: SafeArea(
+      body: isLoading?Center(child: CircularProgressIndicator(color: Colors.blue,),):SafeArea(
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -196,7 +198,7 @@ class _Personal_InfoState extends State<Personal_Info> {
                           Column(
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              Text('JSI001',
+                              Text(username,
                                 style:TextStyle(
                                     // fontWeight: FontWeight.bold,
                                     fontSize: 20
@@ -204,14 +206,14 @@ class _Personal_InfoState extends State<Personal_Info> {
 
                               ),
                               SizedBox(height: 20,),
-                              Text('Patel Hiteshbhai ',
+                              Text(fname.toString() +" "+lname.toString(),
                                 style:TextStyle(
                                     // fontWeight: FontWeight.bold,
                                     fontSize: 20
                                 ),
                               ),
                               SizedBox(height: 20,),
-                              Text('9924140815',
+                              Text('123456789',
                                 style:TextStyle(
                                     // fontWeight: FontWeight.bold,
                                     fontSize: 20
@@ -321,8 +323,10 @@ class _Personal_InfoState extends State<Personal_Info> {
   var acc;
   var add2;
   var email;
+  var fname;
+  var lname;
 
-  //this function is used to fetch particular data in the databsae field
+
   Future getProfileInfo(user,field) async{
     FirebaseDatabase database=FirebaseDatabase.instance;
     DatabaseReference reference=database.ref("users/20CE021");
@@ -331,7 +335,6 @@ class _Personal_InfoState extends State<Personal_Info> {
     print(event.snapshot.value);
     final ref=FirebaseDatabase.instance.ref();
 
-    
     final snapshot=await ref.child("users/${user}/${field}").get();
     if(snapshot.exists)
     {
@@ -343,12 +346,11 @@ class _Personal_InfoState extends State<Personal_Info> {
     }
   }
 
-  //this function fetched data using the above function and sets value to the variables 
   Future setProfileData(user) async{
     username=await getProfileInfo(user, "username");
     adhar=await getProfileInfo(user, "aadhar");
     email=await getProfileInfo(user, "email");
-    acc=await getProfileInfo(user, "acc");
-    add2=await getProfileInfo(user, "add2");
+    fname=await getProfileInfo(user, "fn");
+    lname=await getProfileInfo(user, "ln");
   }
 }

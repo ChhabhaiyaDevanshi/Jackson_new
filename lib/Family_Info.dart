@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class Family_Info extends StatefulWidget {
@@ -8,6 +9,18 @@ class Family_Info extends StatefulWidget {
 }
 
 class _Family_InfoState extends State<Family_Info> {
+  var isLoading=true;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setProfileData("20CE021").whenComplete((){
+      print("All data fetched");
+      setState((){
+        isLoading=false;
+      });
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,7 +37,7 @@ class _Family_InfoState extends State<Family_Info> {
               )
           ),
         ),
-        body: SafeArea(
+        body: isLoading?Center(child: CircularProgressIndicator(color: Colors.blueAccent,),):SafeArea(
           child: Padding(
             padding: const EdgeInsets.only(top: 30.0),
             child: SingleChildScrollView(
@@ -99,7 +112,7 @@ class _Family_InfoState extends State<Family_Info> {
                             SizedBox(width: 20,),
                             Column(
                               children: [
-                                Text('Patel Prakash',
+                                Text(username.toString(),
                                   style:TextStyle(
                                       fontSize: 20
                                   ),
@@ -403,5 +416,38 @@ class _Family_InfoState extends State<Family_Info> {
             ),
           ),
         ));
+  }
+  var username;
+  var adhar;
+  var acc;
+  var add2;
+  var email;
+  var fname;
+  var lname;
+  Future getProfileInfo(user,field) async{
+    FirebaseDatabase database=FirebaseDatabase.instance;
+    DatabaseReference reference=database.ref("users/20CE021");
+    DatabaseEvent event=await reference.once();
+    //fetching data from firebase
+    print(event.snapshot.value);
+    final ref=FirebaseDatabase.instance.ref();
+
+    final snapshot=await ref.child("users/${user}/${field}").get();
+    if(snapshot.exists)
+    {
+      return snapshot.value;
+    }
+    else
+    {
+      print("snapshot failed");
+    }
+  }
+
+  Future setProfileData(user) async{
+    username=await getProfileInfo(user, "username");
+    adhar=await getProfileInfo(user, "aadhar");
+    email=await getProfileInfo(user, "email");
+    fname=await getProfileInfo(user, "fn");
+    lname=await getProfileInfo(user, "ln");
   }
 }

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:jackson_app/home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -33,8 +34,28 @@ class _LoginState extends State<Login> {
     on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
         print('No user found for that email.');
+        await Fluttertoast.showToast(
+            msg: "Invalid Username",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            textColor: Colors.red,
+            backgroundColor: Colors.grey[200],
+            fontSize: 16.0
+        );
+        Navigator.push(context, MaterialPageRoute(builder: (context)=>Login()));
       } else if (e.code == 'wrong-password') {
         print('Wrong password provided for that user.');
+        await Fluttertoast.showToast(
+            msg: "Invalid Password",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            textColor: Colors.red,
+            backgroundColor: Colors.grey[200],
+            fontSize: 16.0
+        );
+        passwordController.text="";
       }
     }
   }
