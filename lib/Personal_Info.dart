@@ -17,7 +17,7 @@ class _Personal_InfoState extends State<Personal_Info> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    setProfileData("20CE021").whenComplete((){
+    setProfileData("jsi001").whenComplete((){
       print("All data fetched");
       setState((){
         isLoading=false;
@@ -40,7 +40,7 @@ class _Personal_InfoState extends State<Personal_Info> {
             )
         ),
       ),
-      body: isLoading?Center(child: CircularProgressIndicator(color: Colors.blue,),):SafeArea(
+      body: isLoading?Center(child: CircularProgressIndicator(color: Colors.blueAccent,),):SafeArea(
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -213,7 +213,7 @@ class _Personal_InfoState extends State<Personal_Info> {
                                 ),
                               ),
                               SizedBox(height: 20,),
-                              Text('123456789',
+                              Text(mno,
                                 style:TextStyle(
                                     // fontWeight: FontWeight.bold,
                                     fontSize: 20
@@ -227,21 +227,21 @@ class _Personal_InfoState extends State<Personal_Info> {
                                 ),
                               ),
                               SizedBox(height: 20,),
-                              Text('GIDC, Ankleshwar',
+                              Text(add2.toString(),
                                 style:TextStyle(
                                     // fontWeight: FontWeight.bold,
                                     fontSize: 20
                                 ),
                               ),
                               SizedBox(height: 20,),
-                              Text('Head',
+                              Text(post.toString(),
                                 style:TextStyle(
                                     // fontWeight: FontWeight.bold,
                                     fontSize: 20
                                 ),
                               ),
                               SizedBox(height: 20,),
-                              Text('Admin',
+                              Text(dept.toString(),
                                 style:TextStyle(
                                     // fontWeight: FontWeight.bold,
                                     fontSize: 20
@@ -249,56 +249,56 @@ class _Personal_InfoState extends State<Personal_Info> {
                               ),
 
                               SizedBox(height: 20,),
-                              Text('21/05/80',
+                              Text(dob,
                                 style:TextStyle(
                                     // fontWeight: FontWeight.bold,
                                     fontSize: 20
                                 ),
                               ),
                               SizedBox(height: 20,),
-                              Text('13/10/2022',
+                              Text(doj,
                                 style:TextStyle(
                                     // fontWeight: FontWeight.bold,
                                     fontSize: 20
                                 ),
                               ),
                               SizedBox(height: 20,),
-                              Text('987654321',
+                              Text(pf.toString(),
                                 style:TextStyle(
                                     // fontWeight: FontWeight.bold,
                                     fontSize: 20
                                 ),
                               ),
                               SizedBox(height: 20,),
-                              Text('${adhar}',
+                              Text(adhar.toString(),
                                 style:TextStyle(
                                     // fontWeight: FontWeight.bold,
                                     fontSize: 20
                                 ),
                               ),
                               SizedBox(height: 20,),
-                              Text('123456789',
+                              Text(acc.toString(),
                                 style:TextStyle(
                                     // fontWeight: FontWeight.bold,
                                     fontSize: 20
                                 ),
                               ),
                               SizedBox(height: 20,),
-                              Text('987654321',
+                              Text(uan.toString(),
                                 style:TextStyle(
                                     // fontWeight: FontWeight.bold,
                                     fontSize: 20
                                 ),
                               ),
                               SizedBox(height: 20,),
-                              Text('987654321',
+                              Text(esi.toString(),
                                 style:TextStyle(
                                     // fontWeight: FontWeight.bold,
                                     fontSize: 20
                                 ),
                               ),
                               SizedBox(height: 20,),
-                              Text('123456789',
+                              Text(pan.toString(),
                                 style:TextStyle(
                                     // fontWeight: FontWeight.bold,
                                     fontSize: 20
@@ -320,16 +320,26 @@ class _Personal_InfoState extends State<Personal_Info> {
   }
   var username;
   var adhar;
-  var acc;
+  var add1;
   var add2;
   var email;
   var fname;
   var lname;
+  var mno;
+  var post;
+  var dept;
+  var dob;
+  var doj;
+  var pf;
+  var acc;
+  var uan;
+  var esi;
+  var pan;
 
 
   Future getProfileInfo(user,field) async{
     FirebaseDatabase database=FirebaseDatabase.instance;
-    DatabaseReference reference=database.ref("users/20CE021");
+    DatabaseReference reference=database.ref("users/jsi001");
     DatabaseEvent event=await reference.once();
     //fetching data from firebase
     print(event.snapshot.value);
@@ -352,5 +362,18 @@ class _Personal_InfoState extends State<Personal_Info> {
     email=await getProfileInfo(user, "email");
     fname=await getProfileInfo(user, "fn");
     lname=await getProfileInfo(user, "ln");
+    mno=await getProfileInfo(user, "mob");
+    add1=await getProfileInfo(user, "add1");
+    add2=await getProfileInfo(user, "add2");
+    post=await getProfileInfo(user, "des");
+    dept=await getProfileInfo(user, "dep");
+    dob=await getProfileInfo(user, "dob");
+    doj=await getProfileInfo(user, "doj");
+    pf=await getProfileInfo(user, "pf");
+    acc=await getProfileInfo(user, "acc");
+    uan=await getProfileInfo(user, "uan");
+    esi=await getProfileInfo(user, "esi");
+    pan=await getProfileInfo(user, "pan");
+
   }
 }

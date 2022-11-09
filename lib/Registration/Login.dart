@@ -120,7 +120,7 @@ class _LoginState extends State<Login> {
                           ),
                           Center(
                               child: MaterialButton(
-                                onPressed: login,
+                                onPressed: checkLoginCredentials,
                                 color: Colors.lightBlue,
                                 // onPressed: () {
                                 //   if (usernameController != null &&
@@ -153,6 +153,24 @@ class _LoginState extends State<Login> {
         ),
       ),
     );
+  }
+
+  checkLoginCredentials() async {
+    if(emailController.text.toString().isEmpty || passwordController.text.toString().isEmpty){
+      await Fluttertoast.showToast(
+          msg: "Please provide valid credentials",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          textColor: Colors.red,
+          backgroundColor: Colors.grey[200],
+          fontSize: 16.0
+      );
+      Navigator.push(context, MaterialPageRoute(builder: (context)=>Login()));
+    }
+    else{
+      login();
+    }
   }
 
   saveSession() async {

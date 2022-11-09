@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class MyAttendance extends StatefulWidget {
@@ -8,7 +9,18 @@ class MyAttendance extends StatefulWidget {
 }
 
 class _MyAttendanceState extends State<MyAttendance> {
+  var isLoading=true;
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setProfileData("jsi001").whenComplete((){
+      print("All data fetched");
+      setState((){
+        isLoading=false;
+      });
+    });
+  }
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -27,13 +39,13 @@ class _MyAttendanceState extends State<MyAttendance> {
           ),
         ),
       ),
-      body: SafeArea(
+      body: isLoading?Center(child: CircularProgressIndicator(color: Colors.blueAccent,),):SafeArea(
         child: Column(
           children: [
             Center(
               child: Padding(
                 padding: const EdgeInsets.only(left: 20, top: 30),
-                child: Text('September 2022',
+                child: Text('November 2022',
                   style: TextStyle(
                       color: Colors.lightBlue,
                       fontWeight: FontWeight.bold,
@@ -69,14 +81,14 @@ class _MyAttendanceState extends State<MyAttendance> {
                         children: [
                           Column(
                             children: [
-                              Text('days present:',
+                              Text('Days present:',
                                 style:TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20
                                 ),
                               ),
                               SizedBox(height: 20,),
-                              Text('days absent:',
+                              Text('Days absent:',
                                 style:TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: 20
@@ -88,7 +100,7 @@ class _MyAttendanceState extends State<MyAttendance> {
                           SizedBox(width: 40,),
                           Column(
                             children: [
-                              Text('29/30',
+                              Text(present.toString(),
                                 style:TextStyle(
                                     fontSize: 20
                                 ),
@@ -112,5 +124,31 @@ class _MyAttendanceState extends State<MyAttendance> {
         ),
       ),
     );
+  }
+  var present;
+
+  Future getProfileInfo(user,field) async{
+    FirebaseDatabase database=FirebaseDatabase.instance;
+    DatabaseReference reference=database.ref("users/jsi001");
+    DatabaseEvent event=await reference.once();
+    //fetching data from firebase
+    print(event.snapshot.value);
+    final ref=FirebaseDatabase.instance.ref();
+
+    final snapshot=await ref.child("users/${user}/${field}").get();
+    if(snapshot.exists)
+    {
+      return snapshot.value;
+    }
+    else
+    {
+      print("snapshot failed");
+    }
+  }
+
+  Future setProfileData(user) async{
+    present=await getProfileInfo(user, "present");
+    //absent=await getProfileInfo(user, "field");
+
   }
 }

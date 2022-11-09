@@ -14,7 +14,7 @@ class _Family_InfoState extends State<Family_Info> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    setProfileData("20CE021").whenComplete((){
+    setProfileData("jsi001").whenComplete((){
       print("All data fetched");
       setState((){
         isLoading=false;
@@ -37,7 +37,7 @@ class _Family_InfoState extends State<Family_Info> {
               )
           ),
         ),
-        body: isLoading?Center(child: CircularProgressIndicator(color: Colors.blueAccent,),):SafeArea(
+        body: isLoading?Center(child: CircularProgressIndicator(color: Colors.blueAccent ,),):SafeArea(
           child: Padding(
             padding: const EdgeInsets.only(top: 30.0),
             child: SingleChildScrollView(
@@ -112,26 +112,26 @@ class _Family_InfoState extends State<Family_Info> {
                             SizedBox(width: 20,),
                             Column(
                               children: [
-                                Text(username.toString(),
+                                Text(f_name.toString(),
                                   style:TextStyle(
                                       fontSize: 20
                                   ),
                                 ),
                                 SizedBox(height: 10,),
-                                Text('9924140815',
+                                Text(f_mob,
                                   style:TextStyle(
                                       // fontWeight: FontWeight.bold
                                       fontSize: 20
                                   ),
                                 ),
                                 SizedBox(height: 10,),
-                                Text('21/05/1980',
+                                Text(f_dob,
                                   style:TextStyle(
                                       fontSize: 20
                                   ),
                                 ),
                                 SizedBox(height: 10,),
-                                Text('987654321',
+                                Text(f_aadhar.toString(),
                                   style:TextStyle(
                                       fontSize: 20
                                   ),
@@ -202,25 +202,25 @@ class _Family_InfoState extends State<Family_Info> {
                     SizedBox(width: 20,),
                     Column(
                       children: [
-                        Text('Patel Archana',
+                        Text(m_name.toString(),
                           style:TextStyle(
                               fontSize: 20
                           ),
                         ),
                         SizedBox(height: 10,),
-                        Text('9924140817',
+                        Text(m_mob,
                           style:TextStyle(
                               fontSize: 20
                           ),
                         ),
                         SizedBox(height: 10,),
-                        Text('11/05/1980',
+                        Text(m_dob,
                           style:TextStyle(
                               fontSize: 20
                           ),
                         ),
                         SizedBox(height: 10,),
-                        Text('987654321',
+                        Text(m_aadhar.toString(),
                           style:TextStyle(
                               fontSize: 20
                           ),
@@ -291,25 +291,25 @@ class _Family_InfoState extends State<Family_Info> {
                             SizedBox(width: 20,),
                             Column(
                               children: [
-                                Text('Patel Rajesh',
+                                Text(s_name.toString(),
                                   style:TextStyle(
                                       fontSize: 20
                                   ),
                                 ),
                                 SizedBox(height: 10,),
-                                Text('9898986611',
+                                Text(s_mob,
                                   style:TextStyle(
                                       fontSize: 20
                                   ),
                                 ),
                                 SizedBox(height: 10,),
-                                Text('30/07/1980',
+                                Text(s_dob,
                                   style:TextStyle(
                                       fontSize: 20
                                   ),
                                 ),
                                 SizedBox(height: 10,),
-                                Text('987654321',
+                                Text(s_aadhar.toString(),
                                   style:TextStyle(
                                       fontSize: 20
                                   ),
@@ -380,25 +380,25 @@ class _Family_InfoState extends State<Family_Info> {
                             SizedBox(width: 20,),
                             Column(
                               children: [
-                                Text('Patel Arya',
+                                Text(c_name.toString(),
                                   style:TextStyle(
                                       fontSize: 20
                                   ),
                                 ),
                                 SizedBox(height: 10,),
-                                Text('--',
+                                Text(c_mob,
                                   style:TextStyle(
                                       fontSize: 20
                                   ),
                                 ),
                                 SizedBox(height: 10,),
-                                Text('08/05/2005',
+                                Text(c_dob,
                                   style:TextStyle(
                                       fontSize: 20
                                   ),
                                 ),
                                 SizedBox(height: 10,),
-                                Text('987654321',
+                                Text(c_aadhar,
                                   style:TextStyle(
                                       fontSize: 20
                                   ),
@@ -417,16 +417,28 @@ class _Family_InfoState extends State<Family_Info> {
           ),
         ));
   }
-  var username;
-  var adhar;
-  var acc;
-  var add2;
-  var email;
-  var fname;
-  var lname;
+  var f_name;
+  var f_mob;
+  var f_dob;
+  var f_aadhar;
+
+  var m_name;
+  var m_mob;
+  var m_dob;
+  var m_aadhar;
+
+  var s_name;
+  var s_mob;
+  var s_dob;
+  var s_aadhar;
+
+  var c_name;
+  var c_mob;
+  var c_dob;
+  var c_aadhar;
   Future getProfileInfo(user,field) async{
     FirebaseDatabase database=FirebaseDatabase.instance;
-    DatabaseReference reference=database.ref("users/20CE021");
+    DatabaseReference reference=database.ref("users/jsi001");
     DatabaseEvent event=await reference.once();
     //fetching data from firebase
     print(event.snapshot.value);
@@ -444,10 +456,26 @@ class _Family_InfoState extends State<Family_Info> {
   }
 
   Future setProfileData(user) async{
-    username=await getProfileInfo(user, "username");
-    adhar=await getProfileInfo(user, "aadhar");
-    email=await getProfileInfo(user, "email");
-    fname=await getProfileInfo(user, "fn");
-    lname=await getProfileInfo(user, "ln");
+    f_name=await getProfileInfo(user, "fathern");
+    f_mob=await getProfileInfo(user, "fathermob");
+    f_dob=await getProfileInfo(user, "fatherdob");
+    f_aadhar=await getProfileInfo(user, "fatheraadhar");
+
+    m_name=await getProfileInfo(user, "mothern");
+    m_mob=await getProfileInfo(user, "mothermob");
+    m_dob=await getProfileInfo(user, "motherdob");
+    m_aadhar=await getProfileInfo(user, "motheraadhar");
+
+
+    s_name=await getProfileInfo(user, "siblingn");
+    s_mob=await getProfileInfo(user, "siblingmob");
+    s_dob=await getProfileInfo(user, "siblingdob");
+    s_aadhar=await getProfileInfo(user, "siblingaadhar");
+
+    c_name=await getProfileInfo(user, "childn");
+    c_mob=await getProfileInfo(user, "childmob");
+    c_dob=await getProfileInfo(user, "childdob");
+    c_aadhar=await getProfileInfo(user, "childaadhar");
+
   }
 }

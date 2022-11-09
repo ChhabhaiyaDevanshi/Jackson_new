@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 class MySalary extends StatefulWidget {
@@ -8,7 +9,19 @@ class MySalary extends StatefulWidget {
 }
 
 class _MySalaryState extends State<MySalary> {
+  var isLoading=true;
+  DateTime date=DateTime.now();
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setProfileData("jsi001").whenComplete((){
+      print("All data fetched");
+      setState((){
+        isLoading=false;
+      });
+    });
+  }
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -24,14 +37,14 @@ class _MySalaryState extends State<MySalary> {
             )
         ),
       ),
-      body: SafeArea(
+      body: isLoading?Center(child: CircularProgressIndicator(color: Colors.blueAccent,),):SafeArea(
 
         child: Column(
           children: [
             Center(
               child: Padding(
                 padding: const EdgeInsets.only(left: 20, top: 30),
-                child: Text('September 2022',
+                child: Text('November/${date.year}',
                   style: TextStyle(
                       color: Colors.lightBlue,
                       fontWeight: FontWeight.bold,
@@ -92,19 +105,19 @@ class _MySalaryState extends State<MySalary> {
                           SizedBox(width: 20,),
                           Column(
                             children: [
-                              Text('20000',
+                              Text(salary,
                                 style:TextStyle(
                                     fontSize: 20
                                 ),
                               ),
                               SizedBox(height: 20,),
-                              Text('987654321',
+                              Text(pf,
                                 style:TextStyle(
                                     fontSize: 20
                                 ),
                               ),
                               SizedBox(height: 20,),
-                              Text('123456789',
+                              Text(acc,
                                 style:TextStyle(
                                     fontSize: 20
                                 ),
@@ -123,4 +136,36 @@ class _MySalaryState extends State<MySalary> {
       ),
     );
   }
+
+  var pf;
+  var acc;
+  var salary;
+
+
+  Future getProfileInfo(user,field) async{
+    FirebaseDatabase database=FirebaseDatabase.instance;
+    DatabaseReference reference=database.ref("users/jsi001");
+    DatabaseEvent event=await reference.once();
+    //fetching data from firebase
+    print(event.snapshot.value);
+    final ref=FirebaseDatabase.instance.ref();
+
+    final snapshot=await ref.child("users/${user}/${field}").get();
+    if(snapshot.exists)
+    {
+      return snapshot.value;
+    }
+    else
+    {
+      print("snapshot failed");
+    }
+  }
+
+  Future setProfileData(user) async{
+
+    pf=await getProfileInfo(user, "pf");
+    salary=await getProfileInfo(user, "salary");
+    acc=await getProfileInfo(user, "acc");
+  }
+
 }

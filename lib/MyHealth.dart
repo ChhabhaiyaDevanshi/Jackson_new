@@ -1,3 +1,4 @@
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 class MyHealth extends StatefulWidget {
   const MyHealth({Key? key}) : super(key: key);
@@ -7,7 +8,19 @@ class MyHealth extends StatefulWidget {
 }
 
 class _MyHealthState extends State<MyHealth> {
+  var isLoading=true;
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    setProfileData("jsi001").whenComplete((){
+      print("All data fetched");
+      setState((){
+        isLoading=false;
+      });
+    });
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -23,7 +36,7 @@ class _MyHealthState extends State<MyHealth> {
             )
         ),
       ),
-      body: SafeArea(
+      body: isLoading?Center(child: CircularProgressIndicator(color: Colors.blueAccent,),):SafeArea(
         child: Padding(
           padding: EdgeInsets.only(top: 30),
           child: Column(
@@ -101,31 +114,31 @@ class _MyHealthState extends State<MyHealth> {
                         ),
                         Column(
                           children: [
-                            Text('A+',
+                            Text(blood.toString(),
                               style:TextStyle(
                                   fontSize: 20
                               ),
                             ),
                             SizedBox(height: 20,),
-                            Text('Bhalgamiya Yash',
+                            Text(doc_name.toString(),
                               style:TextStyle(
                                   fontSize: 20
                               ),
                             ),
                             SizedBox(height: 20,),
-                            Text('13/10/2022',
+                            Text(checkUp_date,
                               style:TextStyle(
                                   fontSize: 20
                               ),
                             ),
                             SizedBox(height: 20,),
-                            Text('Diabetes',
+                            Text(med_history.toString(),
                               style:TextStyle(
                                   fontSize: 20
                               ),
                             ),
                             SizedBox(height: 20,),
-                            Text('Pathri',
+                            Text(curr_treat.toString(),
                               style:TextStyle(
                                   fontSize: 20
                               ),
@@ -143,5 +156,40 @@ class _MyHealthState extends State<MyHealth> {
         ),
       ),
     );
+  }
+
+  var blood;
+  var doc_name;
+  var checkUp_date;
+  var med_history;
+  var curr_treat;
+
+  Future getProfileInfo(user,field) async{
+    FirebaseDatabase database=FirebaseDatabase.instance;
+    DatabaseReference reference=database.ref("users/jsi001");
+    DatabaseEvent event=await reference.once();
+    //fetching data from firebase
+    print(event.snapshot.value);
+    final ref=FirebaseDatabase.instance.ref();
+
+    final snapshot=await ref.child("users/${user}/${field}").get();
+    if(snapshot.exists)
+    {
+      return snapshot.value;
+    }
+    else
+    {
+      print("snapshot failed");
+    }
+  }
+
+  Future setProfileData(user) async{
+    blood=await getProfileInfo(user, "bg");
+    doc_name=await getProfileInfo(user, "nod");
+    checkUp_date=await getProfileInfo(user, "lcd");
+    med_history=await getProfileInfo(user, "mh");
+    curr_treat=await getProfileInfo(user, "ot");
+
+
   }
 }
